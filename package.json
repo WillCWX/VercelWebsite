@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint && prettier . --write",
     "prepare": "husky",
-    "test" : "true"
+    "test": "true"
   },
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^2.0.6",
@@ -40,7 +40,7 @@
     "typescript": "^5"
   },
   "lint-staged": {
-    "*.{ts, tsx}": "eslint --cache --fix",
-    "*.{ts, tsx, css, md, json, mjs, yml}": "prettier --write"
+    "*.{ts,tsx}": "eslint --cache --fix",
+    "*.{ts,tsx,css,md,json,mjs,yml}": "prettier --write"
   }
 }
