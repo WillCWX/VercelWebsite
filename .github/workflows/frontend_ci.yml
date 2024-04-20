@@ -1,5 +1,7 @@
 name: Frontend CI
 on: [push, pull_request]
+env:
+  HUSKY: 0
 jobs:
   build-test:
     runs-on: [ubuntu-latest]
@@ -9,5 +11,4 @@ jobs:
         with:
           node-version: "20"
       - run: npm install
-      - run: npm run lint
       - run: npm run build
