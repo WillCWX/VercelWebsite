@@ -1,5 +1,4 @@
-import { readFileSync, readdirSync } from "fs";
-import matter from "gray-matter";
+import { readdirSync } from "fs";
 
 const POST_LOCATION = "posts/";
 

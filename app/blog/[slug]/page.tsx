@@ -1,6 +1,5 @@
-import parseBlogPost from "@/components/parseBlogPost";
-import parseBlogSlug from "@/components/parseBlogSlug";
-import { Post } from "@/components/types";
+import parseBlogPost from "@/lib/parseBlogPost";
+import parseBlogSlug from "@/lib/parseBlogSlug";
 
 interface BlogPostParams {
   params: {
