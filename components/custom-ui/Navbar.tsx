@@ -31,7 +31,7 @@ export function Navbar() {
                       All my projects
                     </div>
                     <p className="text-sm leading-tight text-muted-foreground">
-                      Web design, Software design, Machine learning and more!
+                      Web design, Software design, Game Development and more!
                     </p>
                   </a>
                 </NavigationMenuLink>
@@ -48,11 +48,8 @@ export function Navbar() {
               >
                 MERN social networking website with in-house group chats
               </ListItem>
-              <ListItem
-                href="/projects/ITS"
-                title="Inteligent Tutoring System (NUS)"
-              >
-                Microservices for scalable student loads and quick responses
+              <ListItem href="/projects/Games" title="Games">
+                Made for my entertainment
               </ListItem>
             </ul>
           </NavigationMenuContent>
