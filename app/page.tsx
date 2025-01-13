@@ -2,6 +2,7 @@
 
 import { Card } from "@/components/Card";
 import { Navbar } from "@/components/custom-ui/Navbar";
+import React from "react";
 
 export default function HomePage() {
   return (
