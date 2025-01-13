@@ -15,7 +15,7 @@ import { ModeToggle } from "./ToggleDarkMode";
 
 export function Navbar() {
   return (
-    <NavigationMenu>
+    <NavigationMenu className="p-5">
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger>My projects</NavigationMenuTrigger>
@@ -53,13 +53,6 @@ export function Navbar() {
               </ListItem>
             </ul>
           </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/docs" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              About Me
-            </NavigationMenuLink>
-          </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <Link href="/docs" legacyBehavior passHref>
