@@ -14,15 +14,15 @@ type CardProps = {
   title: String;
   Item: React.FunctionComponent;
   Description: String;
-  Footer: String;
+  Note: String;
 };
 
-export function MyCard({ title, Item, Description, Footer }: CardProps) {
+export function MyCard({ title, Item, Description, Note }: CardProps) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription> {Footer} </CardDescription>
+        <CardDescription> {Note} </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col md:flex-row items-center justify-center">
         <Item />

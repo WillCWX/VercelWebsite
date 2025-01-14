@@ -3,6 +3,7 @@
 import { Navbar } from "@/components/custom-ui/Navbar";
 import React from "react";
 import { BulletCard } from "@/components/cards/BulletCard";
+import { KakiCard } from "@/components/cards/KakiCard";
 
 export default function HomePage() {
   return (
@@ -11,6 +12,7 @@ export default function HomePage() {
       <Navbar />
       <div className="flex flex-col md:flex-row">
         <BulletCard />
+        <KakiCard />
       </div>
     </div>
   );

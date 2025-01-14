@@ -16,7 +16,7 @@ export function BulletCard() {
           />
         )}
         Description={"My first godot game made in two days"}
-        Footer={"Font and gameover music by godot 2D tutorial asset pack"}
+        Note={"Font and gameover music by godot 2D tutorial asset pack"}
       />
     </>
   );
