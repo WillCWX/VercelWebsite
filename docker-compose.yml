@@ -1,0 +1,52 @@
+services:
+  nodejs-app:
+    build: . # Reuse dockerfile
+    container_name: nodejs-app
+    ports:
+      - "3000:3000"
+    networks:
+      - webapp
+
+  certbot:
+    image: certbot/dns-cloudflare
+    container_name: certbot
+    volumes:
+      - certs:/etc/letsencrypt/
+      - ./.secrets/cloudflare.ini:/cloudflare.ini:ro
+    entrypoint:
+      [
+        "certbot",
+        "certonly",
+        "--dns-cloudflare",
+        "--dns-cloudflare-credentials",
+        "/cloudflare.ini",
+        "-d",
+        "test.williamcwx.com",
+        "--non-interactive",
+        "--agree-tos",
+        "-v",
+      ]
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "443:443"
+      - "80:80" # http debug
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf # copy nginx config
+      - certs:/etc/letsencrypt/:ro # certfile get
+    depends_on:
+      nodejs-app: # Ensure Nginx starts after Node.js app
+        condition: service_started
+      certbot:
+        condition: service_completed_successfully
+    networks:
+      - webapp
+
+volumes:
+  certs:
+
+networks:
+  webapp:
+    driver: bridge

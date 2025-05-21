@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Personal Website
 
-## Getting Started
+Made to display various projects I have done.
 
-First, run the development server:
+### Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+[![Frontend CI](https://github.com/WillCWX/VercelWebsite/actions/workflows/frontend_ci.yml/badge.svg)](https://github.com/WillCWX/VercelWebsite/actions/workflows/frontend_ci.yml)
+![Vercel Deploy](https://deploy-badge.vercel.app/vercel/vercel-website-willcwxs-projects)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[Next.js](https://nextjs.org/) bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+DevOps with [Docker](), [Git](), [Github]().
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Linting with [EsLint](), [Prettier](), [Husky]().
 
-## Learn More
+Currently on [Vercel](https://vercel) deployment for production .
+Docker deployment for testing.
 
-To learn more about Next.js, take a look at the following resources:
+### Development
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Install dependencies with `npm i`
+2. Prepare husky with `npm run husky`
+3. Run hot development server with `npm run dev`
+4. Access the webapp at [http://localhost:3000](http://localhost:3000)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Linting and formatting is done automatically by husky during a git commit.
 
-## Deploy on Vercel
+If husky cannot be installed, lint and format with `npm run lint`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Vercel Deployment
+
+  - Automatically done when pushed to main
+  - Access at [williamcwx.com](https://williamcwx.com)
+
+- Docker Container (HTTP)
+
+  - Create the container with `docker build . -t webapp`
+  - Run the containter with `docker run -p 3000:3000 webapp:latest`
+  - Access the webapp at [http://localhost:3000](http://localhost:3000)
+  - Teardown unused containers with `docker container prune`
+  - Teardown excess images with `docker image prune`
+
+- Docker Container (HTTPS)
+
+  - Create the directory `./.secrets`
+  - Create the file `./.secrets/cloudflare.ini` and [define the api token](https://certbot-dns-cloudflare.readthedocs.io/en/stable/)
+  - Redefine `nginx.conf` cert path and `docker-compose.yml`'s `certbot` if FQDN changes
+  - Create and run the containers with `docker compose up` (`-d` for background)
+  - Access the webapp at [test.williamcwx.com](https://test.williamcwx.com) or the new FQDN
+  - Teardown the containers with `docker compose down`
+
+- Build & Serve
+  - Install dependencies with `npm ci` (clean install)
+  - Build with `npm run build`
+  - Serve with `npm run start`
+  - Access the webapp at [http://localhost:3000](http://localhost:3000)
+  - Stop with `ctrl+c`
+
+### To Do List
+
+- Add Chess AI project into website
+- Add Budgeting java project into website
