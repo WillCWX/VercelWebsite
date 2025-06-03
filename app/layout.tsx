@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import Link from "next/link";
+import { Navbar } from "@/components/custom-ui/Navbar";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -27,7 +29,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <div className="flex flex-col w-screen items-center justify-center">
+            <Link href="/">
+              <p className="md:text-4xl text-3xl pt-5">WilliamCWX</p>
+            </Link>
+            <Navbar />
+            {children}
+          </div>
         </ThemeProvider>
       </body>
     </html>
