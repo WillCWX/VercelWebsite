@@ -1,15 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Square } from "./Square";
-import { Chess } from "chess.js";
+import { Chess, Move } from "chess.js";
 import {
   MoveAction,
   useChess,
   useChessDispatch,
 } from "../chess-hook/ChessContext";
 import { MoveViewer } from "./MoveViewer";
-import { fenToOps } from "../chess-util/fen";
+import { locations } from "../chess-util/fen";
 import { getSymbPieceID } from "../chess-util/chessjsWrapper";
 
 type FenBoardInput = {
@@ -17,50 +17,74 @@ type FenBoardInput = {
 };
 
 export function FenBoard({ size }: FenBoardInput) {
+  // Custom hooks for updating chess state
   const myChess = useChess();
   const myChessDispatch = useChessDispatch();
-  const [result, setResult] = useState("");
+
+  // Create 8x8 alternating colour squares
   const squareLayout = useMemo(() => {
-    console.log("Rerender due to size");
-    return fenToOps(myChess.chess).map(({ file, rank, key }) => {
-      return <Square file={file} rank={rank} key={key} size={size} />;
+    return locations.flatMap((curr) => {
+      return curr.map((str) => {
+        return (
+          <Square
+            file={str.charAt(0)}
+            rank={parseInt(str.charAt(1))}
+            key={str}
+            size={size}
+          />
+        );
+      });
     });
   }, [size]);
 
+  // memoize chess state update function to not trigger worker recreation
+  const chessRef = useRef(myChess.chess);
+  useEffect(() => {
+    chessRef.current = myChess.chess;
+  }, [myChess]);
   const engineMove = useCallback(
-    (chessjs: Chess) => (event: MessageEvent) => {
-      if (chessjs.turn() == "b" && !chessjs.isGameOver()) {
-        setResult(event.data.lan);
-        const ans = chessjs.move(event.data);
-        const moveAction: MoveAction = {
-          type: "move",
-          move: {
-            from: ans.from,
-            to: ans.to,
-            promotion: ans.promotion
-              ? getSymbPieceID("b", ans.promotion)
-              : ans.promotion,
-          },
-        };
-
-        myChessDispatch(moveAction);
+    (event: MessageEvent) => {
+      if (chessRef.current.turn() == "w" || chessRef.current.isGameOver()) {
+        return;
       }
+      const ans: Move = event.data;
+      const moveAction: MoveAction = {
+        type: "move",
+        move: {
+          from: ans.from,
+          to: ans.to,
+          promotion: ans.promotion
+            ? getSymbPieceID("b", ans.promotion)
+            : ans.promotion,
+        },
+      };
+
+      myChessDispatch(moveAction);
     },
     [myChessDispatch],
   );
+
+  // setup engine and postMessage to engine on black's turn
+  const myEngine = useRef<Worker>();
   useEffect(() => {
-    if (myChess.chess.turn() == "w" || myChess.chess.isGameOver()) {
-      return;
-    }
-    const myEngine = new Worker(
+    myEngine.current = new Worker(
       new URL("../chess-util/engine.ts", import.meta.url),
     );
-    myEngine.onmessage = engineMove(myChess.chess);
-    myEngine.postMessage(myChess.chess.fen());
+    myEngine.current.onmessage = engineMove;
     return () => {
-      myEngine.terminate();
+      myEngine.current?.terminate();
     };
-  }, [myChess, engineMove]);
+  }, [engineMove]);
+  useEffect(() => {
+    if (
+      myChess.chess.turn() == "w" ||
+      myChess.chess.isGameOver() ||
+      myEngine.current == undefined
+    ) {
+      return;
+    }
+    myEngine.current.postMessage(myChess.chess.fen());
+  }, [myChess]);
 
   const Debugger = () => {
     return (

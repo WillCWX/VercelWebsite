@@ -14,7 +14,7 @@ export class Algorithm {
       weight == "NaiveBase"
         ? new NaiveWeightEvaluator()
         : new PositionWeightEvaluator();
-    const depth = 6;
+    const depth = 4;
     const chess = new Chess(pos);
     this.eval =
       type == "alphaBeta"

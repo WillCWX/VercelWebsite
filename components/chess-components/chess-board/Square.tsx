@@ -28,31 +28,40 @@ type SquareInput = {
 };
 
 export function Square({ rank, file, size }: SquareInput) {
+  // Square property constants
   const pos = file + rank.toString();
   const squareColor =
     (rank + file.charCodeAt(0)) % 2 == 0 ? darkSquareStyle : lightSquareStyle;
   const isPromotionSquare = rank == 1 || rank == 8;
+
+  // Custom hooks to update chess state & square validity
   const myChess = useChess();
   const chessDispatch = useChessDispatch();
   const selectedSquare = useSelectedSquare();
-  const isValidSquare = useRef(false);
-  const [showPromo, setShowPromo] = useState(false);
-  const [id, setId] = useState(getPieceIDOnSquare(myChess.chess, pos));
-  useEffect(() => {
-    const validMoves = myChess.validMoves;
-    isValidSquare.current = validMoves(selectedSquare).has(pos);
-    setId(getPieceIDOnSquare(myChess.chess, pos));
-  }, [myChess, pos, selectedSquare]);
 
-  // const movesDispatch = useMovesDispatch();
+  // Enable promotions and create it's input props
+  const [showPromo, setShowPromo] = useState(false);
   const move = useRef(null as unknown as MoveInput);
   const onClose = () => {
     setShowPromo(false);
   };
 
+  // Create and update child piece
+  const [id, setId] = useState(getPieceIDOnSquare(myChess.chess, pos));
   const handleDelete = () => {
     setId("");
   };
+  useEffect(() => {
+    setId(getPieceIDOnSquare(myChess.chess, pos));
+    // use myChess instead of myChess.chess as chess is almost never a new object
+  }, [myChess, pos]);
+
+  // Allow, handle and update drop based on square validity
+  const isValidSquare = useRef(false);
+  useEffect(() => {
+    const validMoves = myChess.validMoves;
+    isValidSquare.current = validMoves(selectedSquare).has(pos);
+  }, [myChess.validMoves, pos, selectedSquare]);
 
   const handleDrop = (event: DragEvent) => {
     if (!isValidSquare.current) {
@@ -73,7 +82,7 @@ export function Square({ rank, file, size }: SquareInput) {
       isPromotionSquare &&
       event.dataTransfer.getData("piece").charAt(1) == "P"
     ) {
-      console.log("Promotion!");
+      //console.log("Promotion!");
       setShowPromo(true);
       // let promo handle dispatch
       return;

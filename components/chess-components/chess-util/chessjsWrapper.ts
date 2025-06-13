@@ -11,11 +11,18 @@ export function getPieceIDOnSquare(chess: Chess, pos: string) {
 
 const PieceSet = new Set(["K", "N", "Q", "B", "R"]);
 
+/**
+ * Converts valid white moves to a set
+ *
+ * @param chess
+ * @param square
+ * @returns
+ */
 export function validMovesConversion(
   chess: Chess,
   square: string,
 ): Set<string> {
-  if (square == "") {
+  if (square == "" || chess.turn() == "b") {
     return new Set<string>();
   }
   const validStringMoves = chess.moves({ square: square as Square });

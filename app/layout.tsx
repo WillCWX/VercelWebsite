@@ -18,8 +18,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Known issue: ThemeProvider causes hydration warning for hmtl
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <body
         className={cn(inter.variable, "min-h-screen font-sans antialiased")}
       >

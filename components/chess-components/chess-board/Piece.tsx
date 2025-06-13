@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { DragEvent, useEffect, useState } from "react";
+import { DragEvent } from "react";
 import {
   SelectAction,
   useSelectedSquareDispatch,
@@ -18,11 +18,11 @@ type PieceInput = {
   handleDelete: () => void;
 };
 
-const emptyPiece = <></>;
-
 export function Piece({ piece, size, from, handleDelete }: PieceInput) {
-  // const validMovesReducer = useValidMovesDispatch();
   const selectedPieceDispatch = useSelectedSquareDispatch();
+  if (piece == "") {
+    return <></>;
+  }
   const handleDrag = (event: DragEvent) => {
     event.dataTransfer.effectAllowed = "move";
     const selectAction: SelectAction = {
@@ -32,10 +32,6 @@ export function Piece({ piece, size, from, handleDelete }: PieceInput) {
     selectedPieceDispatch(selectAction);
     event.dataTransfer.setData("piece", piece);
     event.dataTransfer.setData("from", from);
-    // validMovesReducer({
-    // type: "changed",
-    // validMoves: myChess.moves({ square: from as Square }),
-    // });
   };
   const handleCapture = (event: DragEvent) => {
     if (event.dataTransfer.dropEffect == "move") {
@@ -43,19 +39,14 @@ export function Piece({ piece, size, from, handleDelete }: PieceInput) {
     }
   };
 
-  const display =
-    piece != "" ? (
-      <div
-        draggable={true}
-        onDragStart={handleDrag}
-        onDragEndCapture={handleCapture}
-        className="z-1"
-      >
-        <Image src={pieceSrc(piece)} height={size} width={size} alt={piece} />
-      </div>
-    ) : (
-      emptyPiece
-    );
-
-  return display;
+  return (
+    <div
+      draggable={true}
+      onDragStart={handleDrag}
+      onDragEndCapture={handleCapture}
+      className="z-1"
+    >
+      <Image src={pieceSrc(piece)} height={size} width={size} alt={piece} />
+    </div>
+  );
 }
