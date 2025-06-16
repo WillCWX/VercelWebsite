@@ -15,7 +15,7 @@ import { ModeToggle } from "./ToggleDarkMode";
 
 export function Navbar() {
   return (
-    <NavigationMenu className="p-5">
+    <NavigationMenu className="p-5 z-20">
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger>My projects</NavigationMenuTrigger>

@@ -12,7 +12,8 @@ type ModalPromoInput = {
   onClose: () => void;
 };
 
-const buttonStyle = "border-4 border-dashed border-black mx-1";
+const buttonStyle =
+  "border-2 md:border-4 border-dashed border-black mx-1 w-[16px] md:w-[64px]";
 
 export function ModalPromo({ colour, move, onClose }: ModalPromoInput) {
   const size = 50;
@@ -28,40 +29,26 @@ export function ModalPromo({ colour, move, onClose }: ModalPromoInput) {
     myChessDispatch(moveAction);
     onClose();
   };
+
+  const Queen = pieceSrc(colour + "Q");
+  const Rook = pieceSrc(colour + "R");
+  const Bishop = pieceSrc(colour + "B");
+  const Knight = pieceSrc(colour + "N");
+
   return (
-    <div className="modal flex justify-center">
+    <div className="modal flex justify-center z-20">
       <div className="modal-content flex justify-center m-auto w-max-fit">
         <button onClick={onSelection(colour + "Q")} className={buttonStyle}>
-          <Image
-            src={pieceSrc(colour + "Q")}
-            alt="Queen"
-            width={size}
-            height={size}
-          />
+          <Queen />
         </button>
         <button onClick={onSelection(colour + "R")} className={buttonStyle}>
-          <Image
-            src={pieceSrc(colour + "R")}
-            alt="Rook"
-            width={size}
-            height={size}
-          />
+          <Rook />
         </button>
         <button onClick={onSelection(colour + "N")} className={buttonStyle}>
-          <Image
-            src={pieceSrc(colour + "N")}
-            alt="Knight"
-            width={size}
-            height={size}
-          />
+          <Knight />
         </button>
         <button onClick={onSelection(colour + "B")} className={buttonStyle}>
-          <Image
-            src={pieceSrc(colour + "B")}
-            alt="Bishop"
-            width={size}
-            height={size}
-          />
+          <Bishop />
         </button>
       </div>
     </div>

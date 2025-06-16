@@ -24,10 +24,9 @@ type MoveInput = {
 type SquareInput = {
   rank: number;
   file: string;
-  size: number;
 };
 
-export function Square({ rank, file, size }: SquareInput) {
+export function Square({ rank, file }: SquareInput) {
   // Square property constants
   const pos = file + rank.toString();
   const squareColor =
@@ -105,19 +104,19 @@ export function Square({ rank, file, size }: SquareInput) {
 
   return (
     <div
-      className={"board grid relative"}
-      style={{ minHeight: size, minWidth: size }}
+      className={
+        "board grid relative w-[16px] h-[16px] md:w-[50px] md:h-[50px]"
+      }
       id={file + rank.toString()}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       onDropCapture={handleDrop}
       onDragEnter={handleDragEnter}
     >
-      <Piece piece={id} size={size} from={pos} handleDelete={handleDelete} />
+      <Piece piece={id} from={pos} handleDelete={handleDelete} />
       <svg
+        viewBox="0 0 50 50"
         style={{
-          width: size,
-          height: size,
           zIndex: -1,
           ...squareColor,
           position: "absolute",

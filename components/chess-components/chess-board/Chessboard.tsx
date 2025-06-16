@@ -4,7 +4,6 @@ import "./chessboard.css";
 import { FenBoard } from "./FenBoard";
 import { ChessProvider, MyChess } from "../chess-hook/ChessContext";
 import { Chess } from "chess.js";
-import { useState } from "react";
 import { validMovesConversion } from "../chess-util/chessjsWrapper";
 import { SelectedSquareProvider } from "../chess-hook/SelectedSquareContext";
 
@@ -17,15 +16,11 @@ export function Chessboard() {
     moveHistory: [],
     validMoves: (square: string) => validMovesConversion(chessjs, square),
   };
-  const [size, setSize] = useState(50);
-  const Debug = () => {
-    return <button onClick={() => setSize(size + 10)}>size up</button>;
-  };
   return (
     <div className="flex flex-col items-center align-center">
       <ChessProvider initial={myChess}>
         <SelectedSquareProvider>
-          <FenBoard size={size} />
+          <FenBoard />
         </SelectedSquareProvider>
       </ChessProvider>
     </div>

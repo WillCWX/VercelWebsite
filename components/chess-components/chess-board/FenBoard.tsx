@@ -11,12 +11,9 @@ import {
 import { MoveViewer } from "./MoveViewer";
 import { locations } from "../chess-util/fen";
 import { getSymbPieceID } from "../chess-util/chessjsWrapper";
+import { GameState } from "./GameState";
 
-type FenBoardInput = {
-  size: number;
-};
-
-export function FenBoard({ size }: FenBoardInput) {
+export function FenBoard() {
   // Custom hooks for updating chess state
   const myChess = useChess();
   const myChessDispatch = useChessDispatch();
@@ -30,12 +27,11 @@ export function FenBoard({ size }: FenBoardInput) {
             file={str.charAt(0)}
             rank={parseInt(str.charAt(1))}
             key={str}
-            size={size}
           />
         );
       });
     });
-  }, [size]);
+  }, []);
 
   // memoize chess state update function to not trigger worker recreation
   const chessRef = useRef(myChess.chess);
@@ -53,9 +49,7 @@ export function FenBoard({ size }: FenBoardInput) {
         move: {
           from: ans.from,
           to: ans.to,
-          promotion: ans.promotion
-            ? getSymbPieceID("b", ans.promotion)
-            : ans.promotion,
+          promotion: ans.promotion,
         },
       };
 
@@ -91,28 +85,17 @@ export function FenBoard({ size }: FenBoardInput) {
       <button onClick={() => console.log(myChess.chess.ascii())}>Debug</button>
     );
   };
-  const ResetButton = () => {
-    return (
-      <button
-        onClick={() => {
-          const new_valid = new Chess();
-          myChessDispatch({ type: "reset", resetVal: new_valid });
-        }}
-      >
-        RESET
-      </button>
-    );
-  };
 
   return (
     <>
       <Debugger />
       <div className="flex flex-row min-w-full justify-center">
-        <div style={{ minWidth: size * 4 }}></div>
-        <div className="board grid grid-cols-8 max-w-fit">{squareLayout}</div>
-        <MoveViewer size={size} />
+        <GameState />
+        <div className="board grid grid-cols-8 min-w-[128px] md:min-w-[200px]">
+          {squareLayout}
+        </div>
+        <MoveViewer />
       </div>
-      <ResetButton />
     </>
   );
 }

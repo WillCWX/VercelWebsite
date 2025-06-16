@@ -53,3 +53,15 @@ export function getSymbPieceID(color: string, ps: PieceSymbol) {
 export function getPieceID(piece: Piece) {
   return piece.color + piece.type.toLocaleUpperCase();
 }
+
+export function drawPosition(chess: Chess) {
+  const fen = chess.fen().split(" ");
+  fen[4] = "100";
+  return new Chess(fen.join(" "));
+}
+
+export function resignPosition(chess: Chess) {
+  const fen = chess.fen().split(" ");
+  fen[4] = "100";
+  return new Chess(fen.join(" "));
+}

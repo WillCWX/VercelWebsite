@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Link from "next/link";
 import { Navbar } from "@/components/custom-ui/Navbar";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -30,13 +31,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex flex-col w-screen items-center justify-center">
+          <main className="flex flex-col w-screen items-center justify-center">
             <Link href="/">
               <p className="md:text-4xl text-3xl pt-5">WilliamCWX</p>
             </Link>
             <Navbar />
             {children}
-          </div>
+          </main>
+          <Toaster position="top-center" richColors />
         </ThemeProvider>
       </body>
     </html>

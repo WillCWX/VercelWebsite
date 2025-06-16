@@ -13,7 +13,6 @@ export class AlphaBeta {
   private static DELTA = 975;
 
   // transposition table
-  oldTransposition = new Map<string, BoardPos>();
   transposition = new Map<string, BoardPos>();
   softResetTP() {
     this.transposition.forEach((v, k, m) => {
@@ -28,7 +27,6 @@ export class AlphaBeta {
     });
   }
   hardResetTP() {
-    this.oldTransposition = this.transposition;
     this.transposition = new Map<string, BoardPos>();
   }
 
@@ -329,6 +327,7 @@ export class AlphaBeta {
     //console.log(this.chess.ascii());
     //console.log("(%d) vs %d at depth %d", this.score, score, depth);
     console.log(this.getStats());
+    this.hardResetTP();
     return [this.score, move!];
   }
 }
