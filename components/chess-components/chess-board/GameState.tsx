@@ -1,15 +1,6 @@
 "use client";
 
-import {
-  Dispatch,
-  MutableRefObject,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import {
   ResetAction,
   useChess,
@@ -46,7 +37,9 @@ export function GameState() {
     <div className="min-w-[64px] md:min-w-[200px] text-[6px] md:text-lg grid col-1 justify-center content-between">
       <div className="flex flex-col items-center">
         <p className={paragraphTailwind}>
-          {myChess.chess.turn() == "b" ? "Thinking" + dots : " "}
+          {myChess.chess.turn() == "b" && !myChess.chess.isGameOver()
+            ? "Thinking" + dots
+            : " "}
         </p>
         Chester
       </div>
@@ -58,7 +51,9 @@ export function GameState() {
         You
         <br />
         <p className={paragraphTailwind}>
-          {myChess.chess.turn() == "w" ? "Your Turn" : " "}
+          {myChess.chess.turn() == "w" && !myChess.chess.isGameOver()
+            ? "Your Turn"
+            : " "}
         </p>
       </div>
     </div>
@@ -78,6 +73,7 @@ function GameControl({
   const myChess = useChess();
   const myChessDispatch = useChessDispatch();
   const result = useRef([0, 0] as [number, number]);
+  const hasScored = useRef(false);
   const isResignation = useRef(false);
   const [isReset, setIsReset] = useState(false);
   const handleDraw = () => {
@@ -118,6 +114,23 @@ function GameControl({
     myChessDispatch(resignAction);
   };
 
+  const winner = myChess.chess.turn() == "w";
+  useEffect(() => {
+    if (isReset || !myChess.chess.isGameOver()) {
+      // do nothing
+    } else if (myChess.chess.isDraw() && !isResignation.current) {
+      result.current[0] += 0.5;
+      result.current[1] += 0.5;
+      hasScored.current = true;
+    } else if (winner || isResignation.current) {
+      result.current[1] += 1;
+      hasScored.current = true;
+    } else if (!hasScored.current) {
+      result.current[0] += 1;
+      hasScored.current = true;
+    }
+  }, [isReset, myChess.chess, winner]);
+
   if (!myChess.chess.isGameOver()) {
     return (
       <div className="flex flex-col items-center">
@@ -148,6 +161,7 @@ function GameControl({
       resetVal: new Chess(),
     };
     myChessDispatch(resetAction);
+    hasScored.current = false;
   };
   const handleResetStat = () => {
     result.current[0] = 0;
@@ -155,22 +169,11 @@ function GameControl({
     setIsReset(true);
   };
 
-  const winner = myChess.chess.turn() == "w";
-  if (isReset) {
-    // do nothing
-  } else if (myChess.chess.isDraw() && !isResignation.current) {
-    result.current[0] += 0.5;
-    result.current[1] += 0.5;
-  } else if (winner) {
-    result.current[1] += 1;
-  } else {
-    result.current[0] += 1;
-  }
   return (
     <div className="flex flex-col items-center align-center">
       {myChess.chess.isDraw() && !isResignation.current
         ? "Draw"
-        : winner
+        : winner || isResignation.current
           ? "Chester Wins"
           : "You Win"}
       <br />

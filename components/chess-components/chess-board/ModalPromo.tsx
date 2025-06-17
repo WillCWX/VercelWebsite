@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { pieceSrc } from "./Piece";
 import { MoveAction, useChessDispatch } from "../chess-hook/ChessContext";
 

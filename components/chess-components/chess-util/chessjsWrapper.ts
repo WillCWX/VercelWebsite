@@ -30,14 +30,14 @@ export function validMovesConversion(
   const validMoves = new Set<string>();
   for (let i = 0; i < validStringMoves.length; i++) {
     let notation = validStringMoves[i];
+    // remove promotion and capture, check and checkmate
+    notation = notation.replaceAll(/([x#+])|(=[QRNB])/g, "");
     // castling
     if (notation == "O-O") {
       validMoves.add(turn == "w" ? "g1" : "g8");
     } else if (notation == "O-O-O") {
       validMoves.add(turn == "w" ? "c1" : "c8");
     } else {
-      // remove promotion and capture, check and checkmate
-      notation = notation.replaceAll(/([x#+])|(=[QRNB])/g, "");
       // square
       const square = notation.substring(notation.length - 2);
       validMoves.add(square);

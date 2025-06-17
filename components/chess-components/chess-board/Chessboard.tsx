@@ -6,6 +6,8 @@ import { ChessProvider, MyChess } from "../chess-hook/ChessContext";
 import { Chess } from "chess.js";
 import { validMovesConversion } from "../chess-util/chessjsWrapper";
 import { SelectedSquareProvider } from "../chess-hook/SelectedSquareContext";
+import { GameState } from "./GameState";
+import { MoveViewer } from "./MoveViewer";
 
 const defaultBoard = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
@@ -16,11 +18,16 @@ export function Chessboard() {
     moveHistory: [],
     validMoves: (square: string) => validMovesConversion(chessjs, square),
   };
+
   return (
     <div className="flex flex-col items-center align-center">
       <ChessProvider initial={myChess}>
         <SelectedSquareProvider>
-          <FenBoard />
+          <div className="flex flex-row min-w-full justify-center">
+            <GameState />
+            <FenBoard />
+            <MoveViewer />
+          </div>
         </SelectedSquareProvider>
       </ChessProvider>
     </div>

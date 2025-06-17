@@ -2,22 +2,18 @@
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Square } from "./Square";
-import { Chess, Move } from "chess.js";
+import { Move } from "chess.js";
 import {
   MoveAction,
   useChess,
   useChessDispatch,
 } from "../chess-hook/ChessContext";
-import { MoveViewer } from "./MoveViewer";
 import { locations } from "../chess-util/fen";
-import { getSymbPieceID } from "../chess-util/chessjsWrapper";
-import { GameState } from "./GameState";
 
 export function FenBoard() {
   // Custom hooks for updating chess state
   const myChess = useChess();
   const myChessDispatch = useChessDispatch();
-
   // Create 8x8 alternating colour squares
   const squareLayout = useMemo(() => {
     return locations.flatMap((curr) => {
@@ -33,8 +29,10 @@ export function FenBoard() {
     });
   }, []);
 
+  // enforce engine to be called only once, no matter how many rerenders
   // memoize chess state update function to not trigger worker recreation
   const chessRef = useRef(myChess.chess);
+  const hasCalledEngine = useRef(false);
   useEffect(() => {
     chessRef.current = myChess.chess;
   }, [myChess]);
@@ -52,7 +50,6 @@ export function FenBoard() {
           promotion: ans.promotion,
         },
       };
-
       myChessDispatch(moveAction);
     },
     [myChessDispatch],
@@ -71,30 +68,22 @@ export function FenBoard() {
   }, [engineMove]);
   useEffect(() => {
     if (
+      hasCalledEngine.current ||
       myChess.chess.turn() == "w" ||
       myChess.chess.isGameOver() ||
       myEngine.current == undefined
     ) {
+      hasCalledEngine.current = false;
       return;
     }
     myEngine.current.postMessage(myChess.chess.fen());
+    hasCalledEngine.current = true;
   }, [myChess]);
-
-  const Debugger = () => {
-    return (
-      <button onClick={() => console.log(myChess.chess.ascii())}>Debug</button>
-    );
-  };
 
   return (
     <>
-      <Debugger />
-      <div className="flex flex-row min-w-full justify-center">
-        <GameState />
-        <div className="board grid grid-cols-8 min-w-[128px] md:min-w-[200px]">
-          {squareLayout}
-        </div>
-        <MoveViewer />
+      <div className="board grid grid-cols-8 min-w-[128px] md:min-w-[200px]">
+        {squareLayout}
       </div>
     </>
   );
