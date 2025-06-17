@@ -293,7 +293,8 @@ export class AlphaBeta {
    */
   search(): Result {
     this.time = Date.now() + AlphaBeta.LIMIT;
-    console.log(`Max Depth: ${this.depth}`);
+    const logs = [];
+    logs.push(`Max Depth: ${this.depth}`);
     let bestMove;
     for (let i = 1; i <= this.depth; i += 1) {
       this.softResetTP();
@@ -306,7 +307,7 @@ export class AlphaBeta {
       );
       // time limit exceded
       if (this.time <= Date.now()) {
-        console.log("Time limit exceeded!");
+        logs.push("Time limit exceeded!");
         break;
       } else if (
         score == Number.NEGATIVE_INFINITY ||
@@ -314,11 +315,11 @@ export class AlphaBeta {
       ) {
         this.score = score;
         bestMove = this.getMove(score);
-        console.log(`Mate Found: depth ${i}: ${bestMove.san} ${score}`);
+        logs.push(`Mate Found: depth ${i}: ${bestMove.san} ${score}`);
       } else {
         this.score = score;
         bestMove = this.getMove(score);
-        console.log(`depth ${i}: ${bestMove.san}`);
+        logs.push(`depth ${i}: ${bestMove.san}`);
       }
     }
 
@@ -326,9 +327,9 @@ export class AlphaBeta {
 
     //console.log(this.chess.ascii());
     //console.log("(%d) vs %d at depth %d", this.score, score, depth);
-    console.log(this.getStats());
+    logs.push(this.getStats());
     this.hardResetTP();
-    return [this.score, move!];
+    return [this.score, move!, logs];
   }
 }
 

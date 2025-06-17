@@ -9,11 +9,17 @@ import {
   useChessDispatch,
 } from "../chess-hook/ChessContext";
 import { locations } from "../chess-util/fen";
+import {
+  NewLogAction,
+  useChesterLogDispatch,
+} from "../chess-hook/ChesterLogContext";
 
 export function FenBoard() {
   // Custom hooks for updating chess state
   const myChess = useChess();
   const myChessDispatch = useChessDispatch();
+  const chesterLogDispatch = useChesterLogDispatch();
+
   // Create 8x8 alternating colour squares
   const squareLayout = useMemo(() => {
     return locations.flatMap((curr) => {
@@ -41,7 +47,7 @@ export function FenBoard() {
       if (chessRef.current.turn() == "w" || chessRef.current.isGameOver()) {
         return;
       }
-      const ans: Move = event.data;
+      const ans: Move = event.data.move;
       const moveAction: MoveAction = {
         type: "move",
         move: {
@@ -50,9 +56,14 @@ export function FenBoard() {
           promotion: ans.promotion,
         },
       };
+      const newLogAction: NewLogAction = {
+        type: "new",
+        logs: event.data.logs,
+      };
       myChessDispatch(moveAction);
+      chesterLogDispatch(newLogAction);
     },
-    [myChessDispatch],
+    [chesterLogDispatch, myChessDispatch],
   );
 
   // setup engine and postMessage to engine on black's turn

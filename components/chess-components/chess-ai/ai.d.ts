@@ -13,4 +13,4 @@ export interface Evaluator {
   evaluate(chess: Chess): number;
 }
 
-export type Result = [score: number, moves: Move];
+export type Result = [score: number, moves: Move, logs: string[]];

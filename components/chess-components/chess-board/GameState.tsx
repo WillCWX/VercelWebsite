@@ -11,23 +11,37 @@ import { Chess } from "chess.js";
 import { drawPosition, resignPosition } from "../chess-util/chessjsWrapper";
 import { toast } from "sonner";
 
-const paragraphTailwind = "text-[4px] min-h-[6px] md:min-h-[20px] md:text-sm";
+const paragraphTailwind =
+  "flex text-[4px] min-h-[6px] md:min-h-[20px] md:text-sm ";
+
+const Circle = () => (
+  <svg
+    className="mr-[2px] md:mr-2 animate-spin h-[5px] w-[5px] md:h-5 md:w-5"
+    viewBox="0 0 24 24"
+  >
+    <circle
+      className="opacity-25"
+      cx="12"
+      cy="12"
+      r="10"
+      stroke="currentColor"
+      strokeWidth="4"
+    />
+    <path
+      className="opacity-75"
+      fill="currentColor"
+      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+    ></path>
+  </svg>
+);
 
 export function GameState() {
   const myChess = useChess();
   const [isDrawDisabled, setIsDrawDisabled] = useState(false);
-  const [dots, setDots] = useState(".");
 
   useEffect(() => {
     if (myChess.chess.turn() == "b") {
-      const timer1 = setTimeout(() => setDots("."), 500); // 0.5s
-      const timer2 = setTimeout(() => setDots(".."), 2000); // 2s
-      const timer3 = setTimeout(() => setDots("..."), 4500); // 4.5s
       return () => {
-        clearTimeout(timer1);
-        clearTimeout(timer2);
-        clearTimeout(timer3);
-        setDots("");
         setIsDrawDisabled(false);
       };
     }
@@ -37,9 +51,13 @@ export function GameState() {
     <div className="min-w-[64px] md:min-w-[200px] text-[6px] md:text-lg grid col-1 justify-center content-between">
       <div className="flex flex-col items-center">
         <p className={paragraphTailwind}>
-          {myChess.chess.turn() == "b" && !myChess.chess.isGameOver()
-            ? "Thinking" + dots
-            : " "}
+          {myChess.chess.turn() == "b" && !myChess.chess.isGameOver() ? (
+            <>
+              <Circle /> Thinking{" "}
+            </>
+          ) : (
+            " "
+          )}
         </p>
         Chester
       </div>
