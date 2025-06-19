@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useChess } from "../chess-hook/ChessContext";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const orderedList = (moveHistory: string[]) => {
   const moveset = [];
@@ -32,11 +33,20 @@ export function MoveViewer() {
   }, [myChess]);
 
   return (
-    <ol
-      ref={listRef}
-      className="flex flex-col items-right p-1 md:p-4 overflow-y-auto w-[64px] h-[128px] text-[4px] md:text-sm md:w-[200px] md:h-[400px]"
+    <ScrollArea
+      type="always"
+      className="w-[62px] h-[128px] text-[4px] ml-[2px]
+          md:text-sm md:w-[195px] md:h-[400px] md:ml-[5px]
+          bg-card text-card-foreground rounded-sm border shadow-sm"
     >
-      {orderedList(movesHistory)}
-    </ol>
+      <ol
+        ref={listRef}
+        className="flex flex-col 
+          items-right p-1 md:p-3 
+          "
+      >
+        {orderedList(movesHistory)}
+      </ol>
+    </ScrollArea>
   );
 }

@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { useChesterLog } from "../chess-hook/ChesterLogContext";
 import { useChess } from "../chess-hook/ChessContext";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function ChesterReader() {
   const chesterLog = useChesterLog();
@@ -25,16 +26,17 @@ export function ChesterReader() {
         </>
       );
     }
-  }, [chesterLog, myChess.chess.turn()]);
+  }, [chesterLog, myChess.chess]);
 
   return (
-    <div
+    <ScrollArea
       className="w-[256px] h-max-[64px] text-[4px] 
-    md:w-[800px] md:max-h-[120px] md:text-sm 
-    overflow-y-auto text-left m-4 md:m-6 pt-1 pb-1 pl-3
-    font-mono bg-card text-card-foreground rounded-xl border shadow-sm"
+    md:w-[800px] md:max-h-[120px] md:text-sm
+    overflow-y-auto text-left m-1 md:m-2 p-2
+    font-mono bg-card text-card-foreground rounded-sm border shadow-sm"
+      type="always"
     >
       <DisplayLog />
-    </div>
+    </ScrollArea>
   );
 }

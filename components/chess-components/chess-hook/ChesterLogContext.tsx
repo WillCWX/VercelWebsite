@@ -13,7 +13,10 @@ const ChesterLogDispatchContext = createContext(
 );
 
 export function ChesterLogProvider({ children }: { children: ReactNode }) {
-  const [moves, dispatch] = useReducer(moveReducer, [] as string[]);
+  const [moves, dispatch] = useReducer(moveReducer, [
+    "Hi, I'm Chester",
+    "Let's play a game of chess!",
+  ] as string[]);
 
   return (
     <ChesterLogContext.Provider value={moves}>
