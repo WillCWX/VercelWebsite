@@ -2,6 +2,7 @@
 
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import {
+  EndGameAction,
   ResetAction,
   useChess,
   useChessDispatch,
@@ -100,15 +101,15 @@ function GameControl({
   const [isReset, setIsReset] = useState(false);
   const handleDraw = () => {
     // @TODO ADD EVAL INFO TO AUGMENT DRAW CHANCE
-    if (Math.random() < 0.05) {
+    if (Math.random() < 1) {
       toast.success("Chester", {
         description: "Ok draw accepted!",
       });
 
       // @TODO ADD DRAW ACTION TO PRESERVE MOVE HISTORY & FEN
-      const drawAction: ResetAction = {
-        type: "reset",
-        resetVal: drawPosition(myChess.chess),
+      const drawAction: EndGameAction = {
+        type: "end",
+        endVal: drawPosition(myChess.chess),
       };
       myChessDispatch(drawAction);
     } else {
@@ -129,25 +130,15 @@ function GameControl({
     // @TODO ADD RESIGN ACTION TO PRESERVE MOVE HISTORY & FEN
     isResignation.current = true;
     const resigned = resignPosition(myChess.chess);
-    const resignAction: ResetAction = {
-      type: "reset",
-      resetVal: resigned,
+    const resignAction: EndGameAction = {
+      type: "end",
+      endVal: resigned,
     };
     myChessDispatch(resignAction);
   };
 
   const isChesterWin = myChess.chess.turn() == "w";
   useEffect(() => {
-    console.log(
-      "Game:",
-      myChess.chess.isGameOver(),
-      " Reset:",
-      isReset,
-      " Regsigned:",
-      isResignation.current,
-      " isChesterWin:",
-      isChesterWin,
-    );
     if (isReset || !myChess.chess.isGameOver() || hasScored.current) {
       // do nothing
     } else if (myChess.chess.isDraw() && !isResignation.current) {

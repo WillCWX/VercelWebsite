@@ -5,6 +5,7 @@ import {
   ReactNode,
   useContext,
   useReducer,
+  act,
 } from "react";
 import { validMovesConversion } from "../chess-util/chessjsWrapper";
 
@@ -28,16 +29,16 @@ export type ResetAction = {
   resetVal: Chess;
 };
 
-export type ChessAction = MoveAction | ResetAction | UndoAction;
-
-export type ChessMove = {
-  square: string;
-  piece: string;
+export type EndGameAction = {
+  type: "end";
+  endVal: Chess;
 };
+
+export type ChessAction = MoveAction | ResetAction | UndoAction | EndGameAction;
 
 export type MyChess = {
   chess: Chess;
-  moveHistory: ChessMove[];
+  moveHistory: string[];
   validMoves: (square: string) => Set<string>;
 };
 
@@ -79,11 +80,7 @@ function chessReducer(myChess: MyChess, action: ChessAction) {
       try {
         const chessjs = myChess.chess;
         const temp = chessjs.move(action.move);
-        const chessMove: ChessMove = {
-          square: temp.after,
-          piece: temp.piece,
-        };
-        myChess.moveHistory.push(chessMove);
+        myChess.moveHistory.push(temp.san);
         const newMyChess: MyChess = {
           validMoves: (square: string) =>
             validMovesConversion(myChess.chess, square),
@@ -134,6 +131,17 @@ function chessReducer(myChess: MyChess, action: ChessAction) {
       // no reset is done?
       return myChess;
     }
+
+    case "end": {
+      // preserve move history
+      const newMyChess: MyChess = {
+        chess: action.endVal,
+        moveHistory: myChess.moveHistory,
+        validMoves: myChess.validMoves,
+      };
+      return newMyChess;
+    }
+
     default: {
       // this should not happen
       console.error("Unknown action: " + action);

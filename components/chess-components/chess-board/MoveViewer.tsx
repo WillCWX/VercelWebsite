@@ -28,7 +28,7 @@ export function MoveViewer() {
   const [movesHistory, setMoveHistory] = useState([] as string[]);
 
   useEffect(() => {
-    setMoveHistory(myChess.chess.history());
+    setMoveHistory(myChess.moveHistory);
     listRef.current?.lastElementChild?.scrollIntoView();
   }, [myChess]);
 
