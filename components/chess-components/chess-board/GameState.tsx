@@ -204,7 +204,7 @@ function GameControl({
         New Game?
       </Button>
       <Button
-        variant="secondary"
+        variant="muted"
         className={buttonsTailwind}
         onClick={handleResetStat}
       >
