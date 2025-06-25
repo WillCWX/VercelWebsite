@@ -19,15 +19,17 @@ type CardProps = {
 
 export function MyCard({ title, Item, Description, Note }: CardProps) {
   return (
-    <Card>
+    <Card className="md:size-[480px]">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription> {Note} </CardDescription>
+        <CardTitle className="text-xl md:text-2xl">{title}</CardTitle>
+        <CardDescription className="text-sm"> {Note} </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col md:flex-row items-center justify-center">
+      <CardContent className="flex flex-col md:flex-row items-center justify-center w-full h-[300px] relative">
         <Item />
       </CardContent>
-      <CardFooter className="justify-center">{Description}</CardFooter>
+      <CardFooter className="justify-center text-sm md:text-xl mt-2">
+        {Description}
+      </CardFooter>
     </Card>
   );
 }

@@ -4,7 +4,7 @@ import { ChessCard } from "@/components/cards/ChessCard";
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col md:flex-row">
+    <div className="flex flex-col lg:flex-row">
       <BulletCard />
       <KakiCard />
       <ChessCard />

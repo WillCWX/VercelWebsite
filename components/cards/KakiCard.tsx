@@ -10,9 +10,10 @@ export function KakiCard() {
         <Image
           src="/Kakilang.png"
           alt="Kakilang"
-          width={300}
-          height={300}
-          className="h-full w-full object-cover dark:backdrop-brightness-200 dark:grayscale"
+          fill
+          sizes="(min-width: 1024px) 480px, (min-width: 768px) 400px"
+          className="h-full w-full object-contain dark:backdrop-brightness-200 dark:grayscale"
+          priority
         />
       )}
       Description={"Social Site to organize and display gatherings and events"}

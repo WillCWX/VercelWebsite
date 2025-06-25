@@ -12,10 +12,11 @@ export function ChessCard() {
           <Image
             src="/chess-card.gif"
             alt="Chess board"
-            width={220}
-            height={220}
-            className="object-cover"
+            fill
+            sizes="(min-width: 1024px) 480px, (min-width: 768px) 400px"
+            className="object-contain"
             unoptimized={true}
+            priority
           />
         )}
         Description={"Chess game against an AI opponent"}
