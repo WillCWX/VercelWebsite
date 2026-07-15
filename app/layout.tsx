@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import Link from "next/link";
 import { Navbar } from "@/components/custom-ui/Navbar";
 import { Toaster } from "sonner";
+import { UnregisterStaleServiceWorkers } from "@/components/UnregisterStaleServiceWorkers";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
           "min-h-screen font-sans antialiased overflow-hidden overflow-y-auto",
         )}
       >
+        <UnregisterStaleServiceWorkers />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

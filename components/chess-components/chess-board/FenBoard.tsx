@@ -67,7 +67,7 @@ export function FenBoard() {
   );
 
   // setup engine and postMessage to engine on black's turn
-  const myEngine = useRef<Worker>();
+  const myEngine = useRef<Worker>(undefined);
   useEffect(() => {
     myEngine.current = new Worker(
       new URL("../chess-util/engine.ts", import.meta.url),
