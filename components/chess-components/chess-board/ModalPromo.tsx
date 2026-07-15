@@ -1,4 +1,4 @@
-import { pieceSrc } from "./Piece";
+import { pieceComponents, EmptyPiece } from "./Piece";
 import { MoveAction, useChessDispatch } from "../chess-hook/ChessContext";
 
 type ModalPromoInput = {
@@ -29,10 +29,10 @@ export function ModalPromo({ colour, move, onClose }: ModalPromoInput) {
     onClose();
   };
 
-  const Queen = pieceSrc(colour + "Q");
-  const Rook = pieceSrc(colour + "R");
-  const Bishop = pieceSrc(colour + "B");
-  const Knight = pieceSrc(colour + "N");
+  const Queen = pieceComponents[colour + "Q"] ?? EmptyPiece;
+  const Rook = pieceComponents[colour + "R"] ?? EmptyPiece;
+  const Bishop = pieceComponents[colour + "B"] ?? EmptyPiece;
+  const Knight = pieceComponents[colour + "N"] ?? EmptyPiece;
 
   return (
     <div className="modal flex justify-center z-20">

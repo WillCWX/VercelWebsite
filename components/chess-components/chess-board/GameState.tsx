@@ -1,8 +1,9 @@
 "use client";
 
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   EndGameAction,
+  MyChess,
   ResetAction,
   useChess,
   useChessDispatch,
@@ -96,8 +97,8 @@ function GameControl({
   const myChess = useChess();
   const myChessDispatch = useChessDispatch();
   const [result, setResult] = useState([0, 0] as [number, number]);
-  const hasScored = useRef(false);
-  const isResignation = useRef(false);
+  const [scoredChess, setScoredChess] = useState(null as MyChess | null);
+  const [isResignation, setIsResignation] = useState(false);
   const [isReset, setIsReset] = useState(false);
   const handleDraw = () => {
     // @TODO ADD EVAL INFO TO AUGMENT DRAW CHANCE
@@ -128,7 +129,7 @@ function GameControl({
     }
 
     // @TODO ADD RESIGN ACTION TO PRESERVE MOVE HISTORY & FEN
-    isResignation.current = true;
+    setIsResignation(true);
     const resigned = resignPosition(myChess.chess);
     const resignAction: EndGameAction = {
       type: "end",
@@ -138,20 +139,16 @@ function GameControl({
   };
 
   const isChesterWin = myChess.chess.turn() == "w";
-  useEffect(() => {
-    if (isReset || !myChess.chess.isGameOver() || hasScored.current) {
-      // do nothing
-    } else if (myChess.chess.isDraw() && !isResignation.current) {
+  if (!isReset && myChess.chess.isGameOver() && myChess !== scoredChess) {
+    setScoredChess(myChess);
+    if (myChess.chess.isDraw() && !isResignation) {
       setResult((result) => [result[0] + 0.5, result[1] + 0.5]);
-      hasScored.current = true;
-    } else if (isChesterWin || isResignation.current) {
+    } else if (isChesterWin || isResignation) {
       setResult((result) => [result[0], result[1] + 1]);
-      hasScored.current = true;
-    } else if (!hasScored.current) {
+    } else {
       setResult((result) => [result[0] + 1, result[1]]);
-      hasScored.current = true;
     }
-  }, [isReset, myChess, isChesterWin]);
+  }
 
   if (!myChess.chess.isGameOver()) {
     return (
@@ -177,13 +174,12 @@ function GameControl({
 
   const handleNewGame = () => {
     setIsReset(false);
-    isResignation.current = false;
+    setIsResignation(false);
     const resetAction: ResetAction = {
       type: "reset",
       resetVal: new Chess(),
     };
     myChessDispatch(resetAction);
-    hasScored.current = false;
   };
   const handleResetStat = () => {
     setResult((result) => [0, 0]);
@@ -192,9 +188,9 @@ function GameControl({
 
   return (
     <div className="flex flex-col items-center align-center">
-      {myChess.chess.isDraw() && !isResignation.current
+      {myChess.chess.isDraw() && !isResignation
         ? "Draw"
-        : isChesterWin || isResignation.current
+        : isChesterWin || isResignation
           ? "Chester Wins"
           : "You Win"}
       <br />

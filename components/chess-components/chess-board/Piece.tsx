@@ -1,6 +1,6 @@
 "use client";
 
-import { DragEvent } from "react";
+import { ComponentType, DragEvent, SVGProps } from "react";
 import {
   SelectAction,
   useSelectedSquareDispatch,
@@ -20,38 +20,25 @@ import WhiteBishop from "../chess-assets/cburnett/wB.svg";
 import WhiteKnight from "../chess-assets/cburnett/wN.svg";
 import WhitePawn from "../chess-assets/cburnett/wP.svg";
 
-const EmptyPiece = () => <></>;
+export const EmptyPiece = () => <></>;
 
-export const pieceSrc = (src: string) => {
-  switch (src) {
-    case "bK":
-      return BlackKing;
-    case "bQ":
-      return BlackQueen;
-    case "bR":
-      return BlackRook;
-    case "bB":
-      return BlackBishop;
-    case "bN":
-      return BlackKnight;
-    case "bP":
-      return BlackPawn;
+export const pieceComponents: Record<
+  string,
+  ComponentType<SVGProps<SVGSVGElement>>
+> = {
+  bK: BlackKing,
+  bQ: BlackQueen,
+  bR: BlackRook,
+  bB: BlackBishop,
+  bN: BlackKnight,
+  bP: BlackPawn,
 
-    case "wK":
-      return WhiteKing;
-    case "wQ":
-      return WhiteQueen;
-    case "wR":
-      return WhiteRook;
-    case "wB":
-      return WhiteBishop;
-    case "wN":
-      return WhiteKnight;
-    case "wP":
-      return WhitePawn;
-    default:
-      return EmptyPiece;
-  }
+  wK: WhiteKing,
+  wQ: WhiteQueen,
+  wR: WhiteRook,
+  wB: WhiteBishop,
+  wN: WhiteKnight,
+  wP: WhitePawn,
 };
 
 type PieceInput = {
@@ -80,7 +67,7 @@ export function Piece({ piece, from, handleDelete }: PieceInput) {
       handleDelete();
     }
   };
-  const PieceSVG = pieceSrc(piece);
+  const PieceSVG = pieceComponents[piece] ?? EmptyPiece;
 
   return (
     <div

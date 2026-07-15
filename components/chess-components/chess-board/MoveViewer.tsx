@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useChess } from "../chess-hook/ChessContext";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -25,10 +25,8 @@ const orderedList = (moveHistory: string[]) => {
 export function MoveViewer() {
   const myChess = useChess();
   const listRef = useRef(null as unknown as HTMLOListElement);
-  const [movesHistory, setMoveHistory] = useState([] as string[]);
 
   useEffect(() => {
-    setMoveHistory(myChess.moveHistory);
     listRef.current?.lastElementChild?.scrollIntoView();
   }, [myChess]);
 
@@ -45,7 +43,7 @@ export function MoveViewer() {
           items-right p-1 md:p-3 
           "
       >
-        {orderedList(movesHistory)}
+        {orderedList(myChess.moveHistory)}
       </ol>
     </ScrollArea>
   );

@@ -40,20 +40,22 @@ export function Square({ rank, file }: SquareInput) {
 
   // Enable promotions and create it's input props
   const [showPromo, setShowPromo] = useState(false);
-  const move = useRef(null as unknown as MoveInput);
+  const [promoMove, setPromoMove] = useState(null as MoveInput | null);
   const onClose = () => {
     setShowPromo(false);
   };
 
   // Create and update child piece
   const [id, setId] = useState(getPieceIDOnSquare(myChess.chess, pos));
+  const [idSyncedWith, setIdSyncedWith] = useState(myChess);
   const handleDelete = () => {
     setId("");
   };
-  useEffect(() => {
+  // use myChess instead of myChess.chess as chess is almost never a new object
+  if (idSyncedWith !== myChess) {
+    setIdSyncedWith(myChess);
     setId(getPieceIDOnSquare(myChess.chess, pos));
-    // use myChess instead of myChess.chess as chess is almost never a new object
-  }, [myChess, pos]);
+  }
 
   // Allow, handle and update drop based on square validity
   const isValidSquare = useRef(false);
@@ -67,14 +69,10 @@ export function Square({ rank, file }: SquareInput) {
       return;
     }
     event.preventDefault();
-    move.current = {
+    const newMove: MoveInput = {
       from: event.dataTransfer.getData("from"),
       to: pos,
       promotion: undefined,
-    };
-    const moveAction: MoveAction = {
-      type: "move",
-      move: move.current,
     };
 
     if (
@@ -82,11 +80,16 @@ export function Square({ rank, file }: SquareInput) {
       event.dataTransfer.getData("piece").charAt(1) == "P"
     ) {
       //console.log("Promotion!");
+      setPromoMove(newMove);
       setShowPromo(true);
       // let promo handle dispatch
       return;
     }
 
+    const moveAction: MoveAction = {
+      type: "move",
+      move: newMove,
+    };
     chessDispatch(moveAction);
   };
   const handleDragOver = (event: DragEvent) => {
@@ -124,10 +127,11 @@ export function Square({ rank, file }: SquareInput) {
         }}
       />
       {showPromo &&
+        promoMove &&
         createPortal(
           <ModalPromo
             onClose={onClose}
-            move={move.current}
+            move={promoMove}
             colour={rank == 8 ? "w" : "b"}
           />,
           document.body,
